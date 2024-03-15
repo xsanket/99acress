@@ -8,6 +8,7 @@ import Offers from "./pages/Offers";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import PrivateRoute from "./components/PrivateRoute";
 
 
 
@@ -21,7 +22,9 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<PrivateRoute/>}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/offers" element={<Offers />} />
         </Routes>
       </Router>
@@ -37,7 +40,7 @@ function App() {
         draggable
         pauseOnHover
         theme="light"
-        transition="Bounce"/>
+        transition="Bounce" />
       {/* Same as */}
       <ToastContainer />
 
