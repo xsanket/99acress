@@ -1,7 +1,12 @@
 import { React, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Link } from 'react-router-dom';
-import OAuth from './components/OAuth';
+import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
+import { db } from "../firebase"
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+
 
 
 export default function SignUp() {
@@ -12,9 +17,10 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-
+  //password hook destruct
+  const [showPassword, setShowPassword] = useState(false);
   const { name, email, password } = formData;
-
+  const navigate = useNavigate();
   //function to read email and password
   function onChange(e) {
     setFormData((preState) => ({
@@ -23,8 +29,34 @@ export default function SignUp() {
     }));
   }
 
-  //password hook destruct
-  const [showPassword, setShowPassword] = useState(false);
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth()
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      updateProfile(auth.currentUser, {
+        displayName: name
+      });
+      const user = userCredential.user;
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db, "users", user.uid), formDataCopy)
+      toast.success("Registered successfully!");
+      navigate("/");
+
+    } catch (error) {
+      toast.error("server error");
+    }
+
+  }
+
+
+
+
 
 
 
@@ -41,7 +73,7 @@ export default function SignUp() {
         </div>
 
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-          <form >
+          <form onSubmit={onSubmit}>
             <input
 
               type='text'
@@ -53,76 +85,76 @@ export default function SignUp() {
                 transition ease-in-out' />
 
 
+            <input
+
+              type='email'
+              id='email'
+              value={email}
+              onChange={onChange}
+              placeholder='email'
+              className='w-full mb-6 px-4 py-2 text-xl text-gray-600 bg-white border-gray-300 rounded
+              transition ease-in-out'
+
+
+            >
+
+            </input>
+
+            <div className='relative mb-6'>
               <input
 
-                type='email'
-                id='email'
-                value={email}
+                type={showPassword ? "text" : "password"}
+                id='password'
+                value={password}
                 onChange={onChange}
-                placeholder='email'
-                className='w-full mb-6 px-4 py-2 text-xl text-gray-600 bg-white border-gray-300 rounded
+                placeholder='password'
+                className='w-full px-4 py-2 text-xl text-gray-600 bg-white border-gray-300 rounded
               transition ease-in-out'
 
-
-              >
-
-              </input>
-
-              <div className='relative mb-6'>
-                <input
-
-                  type={showPassword ? "text" : "password"}
-                  id='password'
-                  value={password}
-                  onChange={onChange}
-                  placeholder='password'
-                  className='w-full px-4 py-2 text-xl text-gray-600 bg-white border-gray-300 rounded
-              transition ease-in-out'
-
-                ></input>
-                {showPassword ? (<AiFillEye className='absolute text-xl top-3 right-3 cursor-pointer'
+              ></input>
+              {showPassword ? (<AiFillEye className='absolute text-xl top-3 right-3 cursor-pointer'
+                onClick={() => setShowPassword(
+                  (prevState) => !prevState
+                )}
+              />) :
+                (<AiFillEyeInvisible className='absolute text-xl top-3 right-3 cursor-pointer'
                   onClick={() => setShowPassword(
-                    (prevState) => !prevState
-                  )}
-                />) :
-                  (<AiFillEyeInvisible className='absolute text-xl top-3 right-3 cursor-pointer'
-                    onClick={() => setShowPassword(
-                      (prevState) => !prevState)
-                    }
-                  />)}
-              </div>
+                    (prevState) => !prevState)
+                  }
+                />)}
+            </div>
 
-              <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg '>
-                <p>old user?
-                  <Link to={"/sign-in"} className='text-red-600 hover:text-red-800
+            <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg '>
+              <p>old user?
+                <Link to={"/sign-in"} className='text-red-600 hover:text-red-800
                 transition duration-200 ease-in-out ml-1'> Login Here</Link>
-                </p>
-                <p>
-                  <Link to={"/forgot-password"} className='text-blue-600 hover:text-blue-800
+              </p>
+              <p>
+                <Link to={"/forgot-password"} className='text-blue-600 hover:text-blue-800
                 transition duration-200 ease-in-out ml-1'>
-                    Forgot Password?
-                  </Link>
-                </p>
-              </div>
+                  Forgot Password?
+                </Link>
+              </p>
+            </div>
 
 
-              <div className='py-4'>
-                <button className='w-full bg-blue-600 text-white px-7 py-3
+            <div className='py-4'>
+              <button className='w-full bg-blue-600 text-white px-7 py-3
               text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700
               transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800'>
-                  Sign In
-                </button>
-                <div className='flex items-center mt-4
+                Sign In
+              </button>
+              <div className='flex items-center mt-4
             before:border-t before:flex-1 before: border-gray-300 
             after:border-t after:flex-1 after:border-gray-300 '>
-                  <p className='text-center font-semibold mx-4'>
-                    OR
-                  </p>
+                <p className='text-center font-semibold mx-4'>
+                  OR
+                </p>
 
-                </div>
               </div>
+            </div>
 
-              <OAuth />
+            <OAuth />
 
           </form>
 

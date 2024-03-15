@@ -1,7 +1,8 @@
 import { React, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from 'react-router-dom';
-import OAuth from './components/OAuth';
+import OAuth from '../components/OAuth';
+
 
 
 export default function SignIn() {
@@ -42,7 +43,6 @@ export default function SignIn() {
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
           <form >
             <input
-
               type='email'
               id='email'
               value={email}
@@ -50,15 +50,11 @@ export default function SignIn() {
               placeholder='email'
               className='w-full mb-6 px-4 py-2 text-xl text-gray-600 bg-white border-gray-300 rounded
               transition ease-in-out'
-
-
-            >
-
+            > 
             </input>
 
             <div className='relative mb-6'>
               <input
-
                 type={showPassword ? "text" : "password"}
                 id='password'
                 value={password}

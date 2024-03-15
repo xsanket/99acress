@@ -5,23 +5,41 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Offers from "./pages/Offers";
-import Header from "./pages/components/Header";
+import Header from "./components/Header";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function App() {
   return (
     <>
-    <Router>
-    <Header/>
-      <Routes>
-        <Route path="/" element ={<Home/>}/>
-        <Route path="/forgot-password" element ={<ForgotPassword/>}/>
-        <Route path="/sign-in" element ={<SignIn/>}/>
-        <Route path="/sign-up" element ={<SignUp/>}/>
-        <Route path="/profile" element ={<Profile/>}/>
-        <Route path="/offers" element ={<Offers/>}/>
-      </Routes>
-    </Router>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/offers" element={<Offers />} />
+        </Routes>
+      </Router>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition="Bounce"/>
+      {/* Same as */}
+      <ToastContainer />
 
     </>
   );
