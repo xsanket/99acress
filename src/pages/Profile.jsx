@@ -45,14 +45,14 @@ export default function Profile() {
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
-
+        toast.success(`${name}? thats great`);
         // Update into database
         const docRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(docRef, {
           name,
         });
 
-        toast.success(`${name} huh!!!!`);
+        
       }
     } catch (error) {
       //console.error( error); 
