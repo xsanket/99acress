@@ -1,22 +1,20 @@
 import { useState } from "react";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-import {
-    getStorage,
-    ref,
-    uploadBytesResumable,
-    getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
+
+
 export default function CreateListing() {
     const navigate = useNavigate();
     const auth = getAuth();
-    const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+    //geo loc is false so can have lat and long manually
+    const [geolocationEnabled, setGeolocationEnabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         type: "rent",
@@ -50,6 +48,8 @@ export default function CreateListing() {
         longitude,
         images,
     } = formData;
+
+
     function onChange(e) {
         let boolean = null;
         if (e.target.value === "true") {
@@ -58,14 +58,14 @@ export default function CreateListing() {
         if (e.target.value === "false") {
             boolean = false;
         }
-        // Files
+        // for files
         if (e.target.files) {
             setFormData((prevState) => ({
                 ...prevState,
                 images: e.target.files,
             }));
         }
-        // Text/Boolean/Number
+        //int and bool
         if (!e.target.files) {
             setFormData((prevState) => ({
                 ...prevState,
@@ -73,6 +73,8 @@ export default function CreateListing() {
             }));
         }
     }
+
+    //for storing data into data base and geo api
     async function onSubmit(e) {
         e.preventDefault();
         setLoading(true);
@@ -83,9 +85,10 @@ export default function CreateListing() {
         }
         if (images.length > 6) {
             setLoading(false);
-            toast.error("maximum 6 images are allowed");
+            toast.error("max 6 images are allowed");
             return;
         }
+        // google location (card details req)
         let geolocation = {};
         let location;
         if (geolocationEnabled) {
@@ -104,6 +107,8 @@ export default function CreateListing() {
                 toast.error("please enter a correct address");
                 return;
             }
+            // lat -90 to 90 
+            //long -180 to 180
         } else {
             geolocation.lat = latitude;
             geolocation.lng = longitude;
@@ -303,7 +308,7 @@ export default function CreateListing() {
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
                 />
                 {!geolocationEnabled && (
-                    <div className="flex space-x-6 justify-start mb-6">
+                    <div className="flex space-x-6 justify-start mb-1 ">
                         <div className="">
                             <p className="text-lg font-semibold">Latitude</p>
                             <input
@@ -314,6 +319,7 @@ export default function CreateListing() {
                                 required
                                 min="-90"
                                 max="90"
+                                placeholder="-90 to 90"
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
                             />
                         </div>
@@ -327,11 +333,19 @@ export default function CreateListing() {
                                 required
                                 min="-180"
                                 max="180"
+                                placeholder="-180 to 180"
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
                             />
                         </div>
+
                     </div>
+
                 )}
+                <div>
+                    <p className="text-gray-600 mb-6 ">
+                       Range: latitude(-90 to 90) longitude (-180 to 180)
+                    </p>
+                </div>
                 <p className="text-lg font-semibold">Description</p>
                 <textarea
                     type="text"
@@ -375,7 +389,7 @@ export default function CreateListing() {
                                 value={regularPrice}
                                 onChange={onChange}
                                 min="50"
-                                max="4000"
+                                max="99999"
                                 required
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                             />
@@ -398,7 +412,7 @@ export default function CreateListing() {
                                     value={discountedPrice}
                                     onChange={onChange}
                                     min="50"
-                                    max="100"
+                                    max="99999"
                                     required={offer}
                                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                                 />
@@ -416,7 +430,7 @@ export default function CreateListing() {
                 <div className="mb-6">
                     <p className="text-lg font-semibold">Images</p>
                     <p className="text-gray-600">
-                        The first image would be a thumbnail,(max 6)
+                        The first image will be a thumbnail,(max 6)
                     </p>
                     <input
                         type="file"
