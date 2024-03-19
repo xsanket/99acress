@@ -4,18 +4,27 @@ import { toast } from "react-toastify";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 
 
-export default function CreateListing() {
+export default function EditListing() {
     const navigate = useNavigate();
     const auth = getAuth();
+    useEffect(() => {
+        if (listing && listing.userRef != auth.currentUser.uid) {
+            toast.error("Only owner can edit")
+            navigate("/home")
+        }
+    }, [auth.currentUser.uid]);
+
     //geo loc is false so can have lat and long manually
     const [geolocationEnabled, setGeolocationEnabled] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [listing, setListing] = useState(null);
     const [formData, setFormData] = useState({
         type: "rent",
         name: "",
@@ -48,6 +57,34 @@ export default function CreateListing() {
         longitude,
         images,
     } = formData;
+
+
+    const params = useParams();
+    //carry foreword the existing data with edited version
+    useEffect(() => {
+        setLoading(true);
+
+        async function fetchListing() {
+            const docRef = doc(db, "listings", params.listingId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setListing(docSnap.data());
+                setFormData({ ...docSnap.data() })
+                setLoading(false);
+            } else {
+                navigate("/profile");
+                toast.error("listing not exist")
+            }
+
+        }
+
+        fetchListing()
+
+    }, [navigate, params.listingId]);
+
+
+
+
 
 
     function onChange(e) {
@@ -93,7 +130,8 @@ export default function CreateListing() {
         let location;
         if (geolocationEnabled) {
             const response = await fetch(
-                `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+                //key in env file
+                `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.apikeyfromenv}`
             );
             const data = await response.json();
             console.log(data);
@@ -171,9 +209,12 @@ export default function CreateListing() {
         !formDataCopy.offer && delete formDataCopy.discountedPrice;
         delete formDataCopy.latitude;
         delete formDataCopy.longitude;
-        const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+
+        const docRef = doc(db, "listings", params.listingId);
+
+        await updateDoc(docRef, formDataCopy);
         setLoading(false);
-        toast.success("Listing created");
+        toast.success("data updated successfully");
         navigate(`/category/${formDataCopy.type}/${docRef.id}`);
     }
 
@@ -182,7 +223,7 @@ export default function CreateListing() {
     }
     return (
         <main className="max-w-md px-2 mx-auto">
-            <h1 className="text-3xl text-center mt-6 uppercase font-bold">Create a Listing</h1>
+            <h1 className="text-3xl text-center mt-6 font-bold uppercase">Edit Listing</h1>
             <form onSubmit={onSubmit}>
                 <p className="text-lg mt-6 font-semibold">Sell / Rent</p>
                 <div className="flex">
@@ -319,7 +360,7 @@ export default function CreateListing() {
                                 required
                                 min="-90"
                                 max="90"
-                                placeholder="-90 to 90"
+
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
                             />
                         </div>
@@ -333,7 +374,7 @@ export default function CreateListing() {
                                 required
                                 min="-180"
                                 max="180"
-                                placeholder="-180 to 180"
+
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600 text-center"
                             />
                         </div>
@@ -343,7 +384,7 @@ export default function CreateListing() {
                 )}
                 <div>
                     <p className="text-gray-600 mb-6 ">
-                       Range: latitude(-90 to 90) longitude (-180 to 180)
+                        Range: latitude(-90 to 90) longitude (-180 to 180)
                     </p>
                 </div>
                 <p className="text-lg font-semibold">Description</p>
@@ -446,7 +487,7 @@ export default function CreateListing() {
                     type="submit"
                     className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 >
-                    Create Listing
+                    save edit
                 </button>
             </form>
         </main>

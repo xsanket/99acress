@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 export function useAuthStatus() {
   
-    //creating two hooks
+    //creating two hooks for checking login status
     const [loggedIn, setLoggedIn] = useState(false);
     const [checkingStatus, setCheckingStatus] = useState(true);
 
