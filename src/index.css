@@ -12,7 +12,15 @@
     background: -webkit-linear-gradient(to right, rgb(240, 253, 244), #4CB8C4); 
     background: linear-gradient(to right, rgb(240, 253, 244), #4CB8C4);
   }
-  
 
-  
+
+.swiper-button-next:after,
+.swiper-button-prev:after{
+    color: #a8dadc;
+}
+
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill{
+    background: #a8dadc !important
+
+}
   
