@@ -261,7 +261,7 @@ export default function EditListing() {
                     placeholder="Name"
                     maxLength="32"
                     minLength="10"
-                    required
+                   
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
                 />
                 <div className="flex space-x-6 mb-6">
@@ -274,7 +274,7 @@ export default function EditListing() {
                             onChange={onChange}
                             min="1"
                             max="50"
-                            required
+                            
                             className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                         />
                     </div>
@@ -287,7 +287,7 @@ export default function EditListing() {
                             onChange={onChange}
                             min="1"
                             max="50"
-                            required
+                            
                             className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                         />
                     </div>
@@ -345,7 +345,7 @@ export default function EditListing() {
                     value={address}
                     onChange={onChange}
                     placeholder="Address"
-                    required
+                   
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
                 />
                 {!geolocationEnabled && (
@@ -357,7 +357,7 @@ export default function EditListing() {
                                 id="latitude"
                                 value={latitude}
                                 onChange={onChange}
-                                required
+                                
                                 min="-90"
                                 max="90"
 
@@ -371,7 +371,7 @@ export default function EditListing() {
                                 id="longitude"
                                 value={longitude}
                                 onChange={onChange}
-                                required
+                             
                                 min="-180"
                                 max="180"
 
@@ -394,7 +394,7 @@ export default function EditListing() {
                     value={description}
                     onChange={onChange}
                     placeholder="Description"
-                    required
+                    
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
                 />
                 <p className="text-lg font-semibold">Offer</p>
@@ -430,8 +430,8 @@ export default function EditListing() {
                                 value={regularPrice}
                                 onChange={onChange}
                                 min="50"
-                                max="99999"
-                                required
+                                max="9999999"
+                              
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                             />
                             {type === "rent" && (
@@ -453,7 +453,7 @@ export default function EditListing() {
                                     value={discountedPrice}
                                     onChange={onChange}
                                     min="50"
-                                    max="99999"
+                                    max="999999"
                                     required={offer}
                                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
                                 />
@@ -479,7 +479,6 @@ export default function EditListing() {
                         onChange={onChange}
                         accept=".jpg,.png,.jpeg"
                         multiple
-                        required
                         className="w-full px-3 py-1.5 text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:bg-white focus:border-slate-600"
                     />
                 </div>
