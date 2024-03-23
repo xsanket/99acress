@@ -39,12 +39,16 @@ export default function Contact({ userRef, listing }) {
     window.open(gmailLink, '_blank');
   }
 
+  function makeFirstLetterUppercase(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <>
       {landlord !== null && (
         <div className="flex flex-col w-full">
-          <p>
-            Contact {landlord.name} for the {listing.name.toLowerCase()}
+          <p className="font-semibold">
+          Contact {makeFirstLetterUppercase(landlord.name)} for the {makeFirstLetterUppercase(listing.name)}
           </p>
           <div className="mt-3 mb-6">
             <textarea
