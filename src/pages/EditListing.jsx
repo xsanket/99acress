@@ -17,7 +17,7 @@ export default function EditListing() {
     useEffect(() => {
         if (listing && listing.userRef != auth.currentUser.uid) {
             toast.error("Only owner can edit")
-            navigate("/home")
+            navigate("/")
         }
     }, [auth.currentUser.uid]);
 

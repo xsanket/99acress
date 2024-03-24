@@ -13,7 +13,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaBed } from "react-icons/fa";
 import { FaParking, FaChair, FaBath } from "react-icons/fa";
 import { getAuth } from "firebase/auth"
-import Contact from "./Contact";
+import Contact from "../components/Contact";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 

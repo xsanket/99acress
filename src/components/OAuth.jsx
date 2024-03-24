@@ -28,7 +28,7 @@ export default function OAuth() {
           timestamp: serverTimestamp(),
         });
       }
-      navigate("/home")
+      navigate("/")
       toast.success("sign In successfully!") 
       
     } catch (error) {
