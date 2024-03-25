@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react';
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -18,12 +19,12 @@ export default function Header() {
     const [pageState, setPageState] = useState("sign in");
     const auth = getAuth();
 
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user)=>{
-            if(user){
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
                 setPageState("profile");
             }
-            else{
+            else {
                 setPageState("sign in")
             }
         }, [auth]);
@@ -34,10 +35,26 @@ export default function Header() {
         <div className='bg-white border-b shadow-sm sticky top-0 z-50'>
             <header className='flex justify-between px-3 max-w-6xl mx-auto'>
                 <div className='py-3'>
-                    <img src='https://static.rdc.moveaws.com/images/logos/rdc-logo-default.svg' alt='logo'
+                    <img src='/logo.png' alt='Your Image Alt Text'
                         className='h-5 cursor-pointer ' onClick={() => {
                             navigate("/")
                         }} />
+                </div>
+                <div className='footer-container flex justify-center items-center'>
+                    <a
+                        href='https://github.com/xsanket?tab=repositories'
+                        target='_blank'
+                        className='icon text-2xl mr-4 cursor-pointer hover:text-gray-400'
+                    >
+                        <FaGithub />
+                    </a>
+                    <a
+                        href='https://www.linkedin.com/in/sanket-kamble-9840b6252/'
+                        target='_blank'
+                        className='icon text-2xl cursor-pointer hover:text-gray-400'
+                    >
+                        <FaLinkedin />
+                    </a>
                 </div>
 
                 <div>
