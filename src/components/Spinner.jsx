@@ -9,7 +9,7 @@ export default function Spinner() {
       {/* Spinner */}
       <div className="relative z-50">
         <div className="w-20 h-20 rounded-full bg-custom-color shadow-transparent animate-spin flex justify-center items-center text-white font-bold text-4xl">
-          69
+          99
         </div>
         <div className="text-white mt-4 text-center">Loading...</div>
       </div>
